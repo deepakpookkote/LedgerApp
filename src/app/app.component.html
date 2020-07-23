@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="text-center">LEDGER</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <span>Available Balance:</span><hr>
+      <span>Rs.<span style="font-weight: 600;">{{totalAmount}}</span></span>
+    </div>
+    <!--user input-->
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-6">
+          <label>Amount: </label>
+          <input class="form-control" type="number" [(ngModel)]="amount">
+        </div>
+        <div class="col-md-6">
+          <label>Reason: </label>
+          <input class="form-control" type="text" [(ngModel)]="reason">
+        </div>
+        <div class="mt-5 ml-5">
+          <button class="btn btn-warning mr-2" [disabled]="!amount || !reason" (click)="debitAmount()">Debit</button>
+          <button class="btn btn-primary" [disabled]="!amount || !reason" (click)="creditAmount()">Credit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Info Section-->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="navigator" style="margin-bottom: 50px;">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-secondary" [ngClass]="{'active': allTab}" (click)="switchTabs('all')">All</button>
+          <button type="button" class="btn btn-secondary" [ngClass]="{'active': spendsTab}" (click)="switchTabs('spend')">Spends</button>
+          <button type="button" class="btn btn-secondary" [ngClass]="{'active': receivedTab}" (click)="switchTabs('receive')">Received</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="ledgerInfo?.length > 0; else noLedger" >
+      <div class="info-provider all-details row" *ngIf="allTab">
+        <div class="card mr-5 mb-5 ml-3" style="width: 18rem;" *ngFor="let item of ledgerInfo">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted text-capitalize">{{item.reason}}</h6>
+            <p class="card-text">Balance: {{item.balance}}</p>
+            <a  class="card-link">{{item.date | date: 'longDate'}}</a>
+            <a  class="card-link float-right font-weight-bold"><i *ngIf="item.type === 'debit'">-</i><i *ngIf="item.type === 'credit'">+</i>
+              {{item.amount}}</a>
+          </div>
+        </div>
+      </div>
+      <ng-container>
+        <div class="info-provider spend-details row" *ngIf="spendsTab && spendInformation?.length > 0">
+          <div class="card mr-5 mb-5 ml-3" style="width: 18rem;" *ngFor="let item of spendInformation">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted text-capitalize">{{item.reason}}</h6>
+              <p class="card-text">Balance: {{item.balance}}</p>
+              <a  class="card-link">{{item.date | date: 'longDate'}}</a>
+              <a  class="card-link float-right font-weight-bold"><i *ngIf="item.type === 'debit'">-</i><i *ngIf="item.type === 'credit'">+</i>
+                {{item.amount}}</a>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="info-provider received-details row" *ngIf="receivedTab && creditInformation?.length > 0">
+        <div class="card mr-5 mb-5 ml-3" style="width: 18rem;" *ngFor="let item of creditInformation">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted text-capitalize">{{item.reason}}</h6>
+            <p class="card-text">Balance: {{item.balance}}</p>
+            <a  class="card-link">{{item.date | date: 'longDate'}}</a>
+            <a  class="card-link float-right font-weight-bold"><i *ngIf="item.type === 'debit'">-</i><i *ngIf="item.type === 'credit'">+</i>
+              {{item.amount}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noLedger><span class="alert alert-warning">No Data to Display!!</span></ng-template>
+  </div>
+
+</div>
